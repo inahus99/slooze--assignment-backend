@@ -1,0 +1,215 @@
+{
+  "info": {
+    "name": "Slooze FoodApp",
+    "_postman_id": "c7b9d2b4-6c4c-4f1a-82e8-6aa2f2f3f0c1",
+    "description": "RBAC Food ordering API collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"email\": \"nick@slooze.xyz\", \"password\": \"password123\"}"
+        },
+        "url": {
+          "raw": "{{base}}/auth/login",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "auth",
+            "login"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Me",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/me",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "me"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Restaurants",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/restaurants",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "restaurants"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Create Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"items\": [{\"menuItemId\": 1, \"quantity\": 2}]}"
+        },
+        "url": {
+          "raw": "{{base}}/orders",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "orders"
+          ]
+        }
+      }
+    },
+    {
+      "name": "My Orders",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/orders/my",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "orders",
+            "my"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Checkout Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/orders/1/checkout",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "orders",
+            "1",
+            "checkout"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Cancel Order",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base}}/orders/1/cancel",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "orders",
+            "1",
+            "cancel"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Update Payment (Admin)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"paymentMethod\": \"VISA **** 2222\"}"
+        },
+        "url": {
+          "raw": "{{base}}/me/payment-method",
+          "host": [
+            "{{base}}"
+          ],
+          "path": [
+            "me",
+            "payment-method"
+          ]
+        }
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "base",
+      "value": "http://localhost:4000"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}

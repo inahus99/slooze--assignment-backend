@@ -1,0 +1,63 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // Use SQLite locally. If you want Postgres later, swap provider and DATABASE_URL.
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// NOTE: We’re NOT using Prisma enums to avoid connector limitations.
+// We’ll store role/country/status as strings and enforce via app logic.
+
+model User {
+  id            Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  passwordHash  String
+  role          String // "ADMIN" | "MANAGER" | "MEMBER"
+  country       String // "INDIA" | "AMERICA"
+  paymentMethod String?
+  orders        Order[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Restaurant {
+  id        Int        @id @default(autoincrement())
+  name      String
+  country   String // "INDIA" | "AMERICA"
+  menuItems MenuItem[]
+}
+
+model MenuItem {
+  id           Int         @id @default(autoincrement())
+  name         String
+  price        Int // cents
+  restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
+  restaurantId Int
+  orderItems   OrderItem[]
+}
+
+model Order {
+  id         Int         @id @default(autoincrement())
+  user       User        @relation(fields: [userId], references: [id])
+  userId     Int
+  status     String      @default("CREATED") // "CREATED" | "PAID" | "CANCELLED"
+  country    String // copy of user's country at creation
+  items      OrderItem[]
+  totalCents Int         @default(0)
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+}
+
+model OrderItem {
+  id         Int      @id @default(autoincrement())
+  order      Order    @relation(fields: [orderId], references: [id])
+  orderId    Int
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  menuItemId Int
+  quantity   Int
+  priceEach  Int
+}
