@@ -140,7 +140,20 @@ app.post("/orders/:id/cancel", authRequired, requireRole("ADMIN","MANAGER"), asy
   const updated = await prisma.order.update({ where: { id }, data: { status: "CANCELLED" } });
   res.json(updated);
 });
-
+//delete orders for admin only
+app.delete("/orders/:id", authRequired, requireRole("ADMIN"), async (req, res) => {
+  const id = Number(req.params.id);
+  try {
+    // remove children first to satisfy FK constraints
+    await prisma.orderItem.deleteMany({ where: { orderId: id } });
+    const deleted = await prisma.order.delete({ where: { id } });
+    return res.json({ ok: true, id: deleted.id });
+  } catch (e:any) {
+    if (e.code === "P2025") return res.status(404).json({ error: "Not found" }); // Prisma record not found
+    console.error("DELETE /orders/:id failed:", e);
+    return res.status(500).json({ error: "Internal error" });
+  }
+});
 // Update payment method -> ADMIN only (can update self or any user; here we implement self for simplicity)
 app.patch("/me/payment-method", authRequired, requireRole("ADMIN"), body("paymentMethod").isString().isLength({min:3}), async (req, res) => {
   const user = (req as any).user;
